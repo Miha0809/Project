@@ -1,28 +1,44 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Project.Models;
-
-namespace Project.Serivces;
-
-public class ProjectDbContext : DbContext
+﻿namespace Project.Serivces
 {
-    public virtual DbSet<Student> Students { get; set; }
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Project.Models;
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public class ProjectDbContext : DbContext
     {
-        try
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProjectDbContext"/> class.
+        /// </summary>
+        public ProjectDbContext()
         {
-            var server = "Server=mouse.db.elephantsql.com;Port=5432;Database=hpztmnqc;User Id=hpztmnqc;Password=0tcZi3PIFIxiBna9VoCP_IV_nOq85ZGz;";
-            new ConfigurationBuilder()
-                          .Build();
-            optionsBuilder.UseLazyLoadingProxies()
-                          .UseNpgsql(server);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-            throw;
         }
 
+        public virtual DbSet<Student> Students { get; set; }
+
+        /// <summary>
+        /// Setting work with database.
+        /// </summary>
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (optionsBuilder is null)
+            {
+                throw new ArgumentNullException(nameof(optionsBuilder));
+            }
+
+            try
+            {
+                var server = "Server=mouse.db.elephantsql.com;Port=5432;Database=hpztmnqc;User Id=hpztmnqc;Password=0tcZi3PIFIxiBna9VoCP_IV_nOq85ZGz;";
+                new ConfigurationBuilder()
+                              .Build();
+                optionsBuilder.UseLazyLoadingProxies()
+                              .UseNpgsql(server);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                throw;
+            }
+
+        }
     }
 }
